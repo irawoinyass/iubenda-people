@@ -1,12 +1,35 @@
 <template>
-    <img id="logo" src="../assets/logo.png" />
-    <h3>User Login</h3>
-    <div class="login">
-        <p class="error_msg"></p>
-        <input type="email" placeholder="Enter Email" v-model="email" @blur="validateEmail" required>
-        <input type="password" placeholder="Enter Password" v-model="password" required>
-        <button v-on:click="loginBtn">Login</button>
-    </div>
+  
+        <div class="container">
+        
+            <div class="wrapper">
+                <div class="title">
+                    <span>User Form</span>
+                </div>
+        
+                <div class="form">
+                    <div :class="alert_status">{{error_msg }}</div>
+                    <div class="row">
+                        <i class="fa fa-user"></i>
+                        <input type="email" v-model="email" placeholder="Email Address" required>
+                    </div>
+        
+                    <div class="row">
+                        <i class="fa fa-lock"></i>
+                        <input type="password" v-model="password" placeholder="Password" required>
+                    </div>
+        
+                    
+                    <div class="row button">
+        
+                        <input v-on:click="loginBtn" type="submit" value="Login">
+        
+                    </div>
+   
+                </div>
+            </div>
+        </div>
+
 
 </template>
 <script>
@@ -16,7 +39,9 @@ export default {
     data() {
         return {
             email: '',
-            password: ''
+            password: '',
+            alert_status: '',
+            error_msg: ''
         }
     },
     methods: {
@@ -28,70 +53,35 @@ export default {
                 password: this.password
             });
 
+            //console.warn(result);
+
             
-            if (result.data.message == 'success') {
+            if (result.data.message == 'success' && result.status == 200) {
                 //console.warn(result.data);
                 localStorage.setItem("user-details", JSON.stringify(result.data.data));
                 localStorage.setItem("user-tokens", JSON.stringify(result.data.tokens));
-                this.$router.push({ name: 'HomePage' })
+                this.$router.push({ name: 'Dashboard' })
             } else {
-                //this.error_msg(result.data.message)
-                alert(result.data.message);
+
+                this.alert_status = 'alert-danger';
+                this.error_msg = result.data.message;
+               
             }
 
-            // if (result.status == 201) {
-            //     alert('Registered Successfully !!!');
-            // }
-
-            // localStorage.setItem("user-info", JSON.stringify(result.data));
-            // this.$router.push({ name: 'HomePage' })
+           
         }
     },
 
     mounted() {
         let tokens = localStorage.getItem('user-tokens');
         if (tokens) {
-            this.$router.push({ name: 'HomePage' })
+            this.$router.push({ name: 'Dashboard' })
         }
     }
 }
 </script>
 
 <style>
-#logo {
-    width: 100px;
-}
-.login input {
-
-    width: 300px;
-    height: 40px;
-    padding-left: 20px;
-    display: block;
-    margin: auto;
-    margin-bottom: 30px;
-    border: 1px solid skyblue;
-}
-
-.login button {
-
-    width: 320px;
-    height: 40px;
-    border: 1px solid skyblue;
-    color: #fff;
-    background-color: skyblue;
-    cursor: pointer;
-
-}
-
-.error_msg{
-    width: 300px;
-        
-        padding-left: 20px;
-        display: block;
-        margin: auto;
-        margin-bottom: 10px;
-        color: red;
-        display: none;
-
-}
+@import '../assets/css/login.css';
+@import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css';
 </style>

@@ -1,12 +1,12 @@
-import HomePage from './components/HomePage.vue'
+import Dashboard from './components/Dashboard.vue'
 import LogIn from './components/LogIn.vue'
 import {createRouter, createWebHistory} from 'vue-router'
 
 const routes = [
   {
         
-    name:'HomePage',
-    component:HomePage,
+    name:'Dashboard',
+    component:Dashboard,
     path:'/'
 
    },
