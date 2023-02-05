@@ -22,13 +22,13 @@
           >
         </li>
         <li>
-          <router-link to="/create-task" class="active"
+          <router-link to="/create-task" class=""
             ><span class="fa fa-clipboard"></span>
             <span>Create Task</span></router-link
           >
         </li>
         <li>
-          <router-link to="/update-profile"
+          <router-link to="/update-profile" class="active"
             ><span class="fa fa-user"></span>
             <span>Update Profile</span></router-link
           >
@@ -55,7 +55,7 @@
           <span class="fa fa-bars"></span>
         </label>
 
-        Create Task
+        Update Profile
       </h2>
 
       <div class="search-wrapper">
@@ -78,49 +78,35 @@
         <div class="projects">
           <div class="card">
             <div class="card-header">
-              <h2>Create a task</h2>
+              <h2>Profile settings</h2>
             </div>
             <div class="card-body">
               <div class="main_form">
                 <div :class="alert_status">{{ error_msg }}</div>
-                <label for="headline">Headline</label>
+                <label for="name">Name</label>
+                <input type="text" v-model="profile.name" placeholder="Name" />
+
+                <label for="email">Email Address</label>
                 <input
-                  type="text"
-                  v-model="tasks.headline"
-                  placeholder="Headline"
+                  type="email"
+                  v-model="profile.email"
+                  placeholder="Email Address"
                 />
 
-                <label for="desc">Description</label>
-                <textarea
-                  cols=""
-                  rows=""
-                  v-model="tasks.description"
-                  placeholder="Say something...."
-                ></textarea>
+                <label for="date">Date of birth</label>
+                <input type="date" v-model="profile.date_of_birth" />
 
-                <label for="date">Due Date</label>
-                <input type="date" v-model="tasks.due_date" />
+                <input type="hidden" v-model="profile.people_id" />
+                <input type="hidden" v-model="profile.position" />
 
-                <label for="colla"
-                  >Collaborators [<small
-                    ><b>kindly seperates collaborator names with coma</b></small
-                  >]</label
-                >
-                <input
-                  type="text"
-                  placeholder="E.g lasisisaheed@gmail.com,biodun@gmail.com"
-                  v-model="tasks.collaborators"
-                />
-
-                <input type="hidden" v-model="tasks.email" />
-                <label for="solved">Solved</label>
-                <select id="" v-model="tasks.solved">
+                <label for="gender">Gender</label>
+                <select id="" v-model="profile.gender">
                   <option value="">Please select one</option>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                 </select>
 
-                <input v-on:click="createBtn" type="submit" value="Submit" />
+                <input v-on:click="submitBtn" type="submit" value="Update" />
               </div>
             </div>
           </div>
@@ -131,24 +117,26 @@
 </template>
 
 <script>
+// import axios from 'axios';
+
 import axios from "axios";
 
 export default {
-  name: "createTask",
+  name: "updateProfile",
   data() {
     return {
       name: "",
       position: "",
       alert_status: "",
       error_msg: "",
-      solved: "",
-      tasks: {
-        headline: "",
-        description: "",
-        due_date: "",
-        collaborators: "",
-        solved: "",
+      profile: {
+        people_id: "",
+        name: "",
         email: "",
+        due_date: "",
+        gender: "",
+        date_of_birth: "",
+        position: "",
       },
     };
   },
@@ -158,40 +146,35 @@ export default {
       this.$router.push({ name: "LogIn" });
     },
 
-    async createBtn() {
-      if (this.tasks.headline == "") {
+    async submitBtn() {
+      if (this.profile.name == "") {
         this.alert_status = "alert-danger";
-        this.error_msg = "Headline field is required!";
-      } else if (this.tasks.description == "") {
+        this.error_msg = "Name field is required!";
+      } else if (this.profile.email == "") {
         this.alert_status = "alert-danger";
-        this.error_msg = "Description field is required!";
-      } else if (this.tasks.due_date == "") {
+        this.error_msg = "Email field is required!";
+      } else if (this.profile.date_of_birth == "") {
         this.alert_status = "alert-danger";
-        this.error_msg = "Due date field is required!";
-      } else if (this.tasks.solved == "") {
+        this.error_msg = "DOB field is required!";
+      } else if (this.profile.gender == "") {
         this.alert_status = "alert-danger";
-        this.error_msg = "Solved field is required!";
+        this.error_msg = "Gender field is required!";
       } else {
         const result = await axios.post(
-          "http://localhost/iubenda_backend/api/people/task/create.php",
+          "http://localhost/iubenda_backend/api/people/auth/update.php",
           {
-            headline: this.tasks.headline,
-            description: this.tasks.description,
-            due_date: this.tasks.due_date,
-            collaborators: this.tasks.collaborators,
-            solved: this.tasks.solved,
-            email: this.tasks.email,
+            name: this.profile.name,
+            email: this.profile.email,
+            gender: this.profile.gender,
+            date_of_birth: this.profile.date_of_birth,
+            people_id: this.profile.people_id,
           }
         );
-
         if (result.data.message == "success" && result.status == 200) {
           this.alert_status = "alert-success";
           this.error_msg = result.data.message;
-          this.tasks.headline = "";
-          this.tasks.description = "";
-          this.tasks.due_date = "";
-          this.tasks.collaborators = "";
-          this.tasks.solved = "";
+          //localStorage.clear("user-details");
+          localStorage.setItem("user-details", JSON.stringify(this.profile));
         } else {
           this.alert_status = "alert-danger";
           this.error_msg = result.data.message;
@@ -204,7 +187,12 @@ export default {
     let user = localStorage.getItem("user-details");
     this.name = JSON.parse(user).name;
     this.position = JSON.parse(user).position;
-    this.tasks.email = JSON.parse(user).email;
+    this.profile.email = JSON.parse(user).email;
+    this.profile.name = JSON.parse(user).name;
+    this.profile.date_of_birth = JSON.parse(user).date_of_birth;
+    this.profile.gender = JSON.parse(user).gender;
+    this.profile.people_id = JSON.parse(user).people_id;
+    this.profile.position = JSON.parse(user).position;
     // console.warn(user)
     if (tokens == null) {
       this.$router.push({ name: "LogIn" });

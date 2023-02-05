@@ -10,19 +10,19 @@
     <div class="sidebar-menu">
       <ul>
         <li>
-          <router-link to="/" class="active"
+          <router-link to="/" class=""
             ><span class="fa fa-home"></span>
             <span>Dashboard</span></router-link
           >
         </li>
 
         <li>
-          <a href="/create-task"
-            ><span class="fa fa-book"></span> <span>Tasks</span></a
+          <router-link to="" class=""
+            ><span class="fa fa-book"></span> <span>Tasks</span></router-link
           >
         </li>
         <li>
-          <router-link to="/create-task"
+          <router-link to="/create-task" class=""
             ><span class="fa fa-clipboard"></span>
             <span>Create Task</span></router-link
           >
@@ -34,7 +34,7 @@
           >
         </li>
         <li>
-          <router-link to="/reset-password"
+          <router-link to="/reset-password" class="active"
             ><span class="fa fa-lock"></span>
             <span>Reset Password</span></router-link
           >
@@ -55,7 +55,7 @@
           <span class="fa fa-bars"></span>
         </label>
 
-        Dashboard
+        Reset Password
       </h2>
 
       <div class="search-wrapper">
@@ -78,57 +78,35 @@
         <div class="projects">
           <div class="card">
             <div class="card-header">
-              <h2>Recent Project</h2>
-              <button>Sell all <span class="fa fa-arrow-right"></span></button>
+              <h2>Password settings</h2>
             </div>
             <div class="card-body">
-              <div class="table-responsive">
-                <table width="100%">
-                  <thead>
-                    <tr>
-                      <td>Project Title</td>
-                      <td>Department</td>
-                      <td>Status</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>UI/UX Design</td>
-                      <td>UI Team</td>
-                      <td><span class="status pink"></span> review</td>
-                    </tr>
+              <div class="main_form">
+                <div :class="alert_status">{{ error_msg }}</div>
+                <label for="password">Old Pasword</label>
+                <input
+                  type="password"
+                  v-model="old_password"
+                  placeholder="Old Password"
+                />
 
-                    <tr>
-                      <td>Web Development</td>
-                      <td>Web Team</td>
-                      <td><span class="status red"></span> in progress</td>
-                    </tr>
+                <label for="password">New Pasword</label>
+                <input
+                  type="password"
+                  v-model="password"
+                  placeholder="New Password"
+                />
 
-                    <tr>
-                      <td>Ushop app</td>
-                      <td>UshopTeam</td>
-                      <td><span class="status orange"></span> pending</td>
-                    </tr>
+                <label for="password">Confirm Pasword</label>
+                <input
+                  type="password"
+                  v-model="confirm_password"
+                  placeholder="Confirm Password"
+                />
 
-                    <tr>
-                      <td>UI/UX Design</td>
-                      <td>UI Team</td>
-                      <td><span class="status green"></span> review</td>
-                    </tr>
+                <input type="hidden" v-model="people_id" />
 
-                    <tr>
-                      <td>Web Development</td>
-                      <td>Web Team</td>
-                      <td><span class="status pink"></span> in progress</td>
-                    </tr>
-
-                    <tr>
-                      <td>Ushop app</td>
-                      <td>UshopTeam</td>
-                      <td><span class="status purple"></span> pending</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <input v-on:click="resetBtn" type="submit" value="Reset" />
               </div>
             </div>
           </div>
@@ -139,12 +117,22 @@
 </template>
 
 <script>
+// import axios from 'axios';
+
+import axios from "axios";
+
 export default {
-  name: "Dashboard",
+  name: "resetPassword",
   data() {
     return {
       name: "",
       position: "",
+      alert_status: "",
+      error_msg: "",
+      old_password: "",
+      password: "",
+      people_id: "",
+      confirm_password: "",
     };
   },
   methods: {
@@ -152,12 +140,46 @@ export default {
       localStorage.clear();
       this.$router.push({ name: "LogIn" });
     },
+
+    async resetBtn() {
+      if (this.old_password == "") {
+        this.alert_status = "alert-danger";
+        this.error_msg = "Old Password field is required!";
+      } else if (this.password == "") {
+        this.alert_status = "alert-danger";
+        this.error_msg = "New Password field is required!";
+      } else if (this.password != this.confirm_password) {
+        this.alert_status = "alert-danger";
+        this.error_msg = "Password does not match!";
+      } else {
+        const result = await axios.post(
+          "http://localhost/iubenda_backend/api/people/auth/password_reset.php",
+          {
+            people_id: this.people_id,
+            old_password: this.old_password,
+            password: this.password,
+          }
+        );
+        if (result.data.message == "success" && result.status == 200) {
+          this.alert_status = "alert-success";
+          this.error_msg = result.data.message;
+          this.old_password = "";
+          this.password = "";
+          this.confirm_password = "";
+        } else {
+          this.alert_status = "alert-danger";
+          this.error_msg = result.data.message;
+        }
+      }
+    },
   },
   mounted() {
     let tokens = localStorage.getItem("user-tokens");
     let user = localStorage.getItem("user-details");
     this.name = JSON.parse(user).name;
     this.position = JSON.parse(user).position;
+    this.people_id = JSON.parse(user).people_id;
+
     // console.warn(user)
     if (tokens == null) {
       this.$router.push({ name: "LogIn" });
