@@ -10,14 +10,14 @@
     <div class="sidebar-menu">
       <ul>
         <li>
-          <router-link to="/" class="active"
+          <router-link to="/"
             ><span class="fa fa-home"></span>
             <span>Dashboard</span></router-link
           >
         </li>
 
         <li>
-          <router-link to="/tasks"
+          <router-link to="/tasks" class="active"
             ><span class="fa fa-book"></span> <span>Tasks</span></router-link
           >
         </li>
@@ -56,7 +56,7 @@
           <span class="fa fa-bars"></span>
         </label>
 
-        Dashboard
+        Tasks
       </h2>
 
       <div class="search-wrapper">
@@ -79,10 +79,7 @@
         <div class="projects">
           <div class="card">
             <div class="card-header">
-              <h2>Recent Project</h2>
-              <router-link to="/tasks"
-                >Sell all <span class="fa fa-arrow-right"></span
-              ></router-link>
+              <h2>Record</h2>
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -137,9 +134,8 @@
 
 <script>
 import axios from "axios";
-
 export default {
-  name: "Dashboard",
+  name: "Tasks",
   data() {
     return {
       name: "",
@@ -166,6 +162,7 @@ export default {
       localStorage.clear();
       this.$router.push({ name: "LogIn" });
     },
+
     async loadData() {
       let tokens = localStorage.getItem("user-tokens");
       let user = localStorage.getItem("user-details");
@@ -173,14 +170,14 @@ export default {
       this.position = JSON.parse(user).position;
 
       const result = await axios.post(
-        "http://localhost/iubenda_backend/api/people/task/dashboard_list.php",
+        "http://localhost/iubenda_backend/api/people/task/list.php",
         {
           p_id: JSON.parse(user).people_id,
         }
       );
 
       this.tasks = result.data.data;
-      //console.warn(this.tasks);
+      ///console.warn(this.tasks);
 
       if (tokens == null) {
         this.$router.push({ name: "LogIn" });

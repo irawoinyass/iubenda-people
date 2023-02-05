@@ -274,9 +274,69 @@ main {
 	cursor: pointer;
 }
 
+td .button {
+	margin: 10px;
+}
+
+.button button {
+	background: var(--main-color);
+	border-radius: 10px;
+	color: #fff;
+	font-size: .8rem;
+	padding: .5rem 1rem;
+	border: 1px solid var(--main-color);
+	cursor: pointer;
+}
+
+.button a {
+	background: var(--main-color);
+	border-radius: 10px;
+	color: #fff;
+	font-size: .8rem;
+	padding: .5rem 1rem;
+	margin-bottom: 1rem;
+	border: 1px solid var(--main-color);
+	cursor: pointer;
+}
+
+.button {
+	background: var(--main-color);
+	border-radius: 10px;
+	color: #fff;
+	font-size: .8rem;
+	padding: .5rem 1rem;
+	margin-bottom: 1rem;
+	border: 1px solid var(--main-color);
+	cursor: pointer;
+}
+
+
+.card-header a {
+	background: var(--main-color);
+	border-radius: 10px;
+	color: #fff;
+	font-size: .8rem;
+	padding: .5rem 1rem;
+	border: 1px solid var(--main-color);
+	cursor: pointer;
+}
+
 table {
 	border-collapse: collapse;
+
 }
+
+/* table td {
+	border: 1px solid #ddd;
+}
+
+table tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+table tr:hover {
+	background-color: #ddd;
+} */
 
 thead tr {
 	border-top: 1px solid #f0f0f0;
@@ -327,6 +387,11 @@ tr td:last-child {
 	background: seagreen;
 }
 
+.status.Yes {
+
+	background: seagreen;
+}
+
 
 .status.blue {
 
@@ -335,6 +400,11 @@ tr td:last-child {
 
 
 .status.red {
+
+	background: red;
+}
+
+.status.No {
 
 	background: red;
 }

@@ -22,7 +22,7 @@
         </li>
 
         <li>
-          <router-link to="/create-task" class="active"
+          <router-link to="/create-task"
             ><span class="fa fa-clipboard"></span>
             <span>Create Task</span></router-link
           >
@@ -55,7 +55,7 @@
           <span class="fa fa-bars"></span>
         </label>
 
-        Create Task
+        update Task
       </h2>
 
       <div class="search-wrapper">
@@ -78,7 +78,7 @@
         <div class="projects">
           <div class="card">
             <div class="card-header">
-              <h2>Create a task</h2>
+              <h2>update task</h2>
             </div>
             <div class="card-body">
               <div class="main_form">
@@ -101,18 +101,18 @@
                 <label for="date">Due Date</label>
                 <input type="date" v-model="tasks.due_date" />
 
-                <label for="colla"
+                <!-- <label for="colla"
                   >Collaborators [<small
                     ><b>kindly seperates collaborator names with coma</b></small
                   >]</label
-                >
-                <input
+                > -->
+                <!-- <input
                   type="text"
                   placeholder="E.g lasisisaheed@gmail.com,biodun@gmail.com"
                   v-model="tasks.collaborators"
-                />
+                /> -->
 
-                <input type="" v-model="tasks.email" />
+                <input type="hidden" v-model="tasks.task_id" />
                 <label for="solved">Solved</label>
                 <select id="" v-model="tasks.solved">
                   <option value="">Please select one</option>
@@ -120,7 +120,7 @@
                   <option value="No">No</option>
                 </select>
 
-                <input v-on:click="createBtn" type="submit" value="Submit" />
+                <input v-on:click="updateBtn" type="submit" value="Submit" />
               </div>
             </div>
           </div>
@@ -134,7 +134,7 @@
 import axios from "axios";
 
 export default {
-  name: "createTask",
+  name: "updateTask",
   data() {
     return {
       name: "",
@@ -149,6 +149,7 @@ export default {
         collaborators: "",
         solved: "",
         email: "",
+        task_id: "",
       },
     };
   },
@@ -158,7 +159,7 @@ export default {
       this.$router.push({ name: "LogIn" });
     },
 
-    async createBtn() {
+    async updateBtn() {
       if (this.tasks.headline == "") {
         this.alert_status = "alert-danger";
         this.error_msg = "Headline field is required!";
@@ -173,25 +174,19 @@ export default {
         this.error_msg = "Solved field is required!";
       } else {
         const result = await axios.post(
-          "http://localhost/iubenda_backend/api/people/task/create.php",
+          "http://localhost/iubenda_backend/api/people/task/update.php",
           {
+            task_id: this.tasks.task_id,
             headline: this.tasks.headline,
             description: this.tasks.description,
             due_date: this.tasks.due_date,
-            collaborators: this.tasks.collaborators,
             solved: this.tasks.solved,
-            email: this.tasks.email,
           }
         );
 
         if (result.data.message == "success" && result.status == 200) {
           this.alert_status = "alert-success";
           this.error_msg = result.data.message;
-          this.tasks.headline = "";
-          this.tasks.description = "";
-          this.tasks.due_date = "";
-          this.tasks.collaborators = "";
-          this.tasks.solved = "";
         } else {
           this.alert_status = "alert-danger";
           this.error_msg = result.data.message;
@@ -199,7 +194,7 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
     let tokens = localStorage.getItem("user-tokens");
     let user = localStorage.getItem("user-details");
     this.name = JSON.parse(user).name;
@@ -209,6 +204,15 @@ export default {
     if (tokens == null) {
       this.$router.push({ name: "LogIn" });
     }
+
+    const result = await axios.get(
+      "http://localhost/iubenda_backend/api/people/task/find.php?id=" +
+        this.$route.params.id
+    );
+
+    this.tasks = result.data;
+
+    //console.log(result);
   },
 };
 </script>

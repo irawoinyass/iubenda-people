@@ -17,10 +17,11 @@
         </li>
 
         <li>
-          <router-link to="" class=""
+          <router-link to="/tasks"
             ><span class="fa fa-book"></span> <span>Tasks</span></router-link
           >
         </li>
+
         <li>
           <router-link to="/create-task" class=""
             ><span class="fa fa-clipboard"></span>

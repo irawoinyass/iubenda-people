@@ -2,7 +2,7 @@
   <div class="container">
     <div class="wrapper">
       <div class="title">
-        <span>User Form</span>
+        <span>User Login</span>
       </div>
 
       <div class="form">
