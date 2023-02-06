@@ -80,6 +80,7 @@
           <div class="card">
             <div class="card-header">
               <h2>Record</h2>
+              <input type="text" v-model="search" placeholder="Search" />
             </div>
             <div class="card-body">
               <div class="table-responsive">
@@ -96,7 +97,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="task in tasks" :key="task.task_id">
+                    <tr v-for="task in filterData" :key="task.task_id">
                       <td>{{ task.row_id }}</td>
                       <td>{{ task.headline }}</td>
                       <td>{{ task.description }}</td>
@@ -140,6 +141,7 @@ export default {
     return {
       name: "",
       position: "",
+      search: "",
       tasks: [],
     };
   },
@@ -191,6 +193,13 @@ export default {
     } else {
       this.loadData();
     }
+  },
+  computed: {
+    filterData() {
+      return this.tasks.filter((item) =>
+        item.headline.toLowerCase().includes(this.search.toLowerCase())
+      );
+    },
   },
 };
 </script>
