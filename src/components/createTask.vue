@@ -112,7 +112,7 @@
                   v-model="tasks.collaborators"
                 />
 
-                <input type="" v-model="tasks.email" />
+                <input type="hidden" v-model="tasks.email" />
                 <label for="solved">Solved</label>
                 <select id="" v-model="tasks.solved">
                   <option value="">Please select one</option>
