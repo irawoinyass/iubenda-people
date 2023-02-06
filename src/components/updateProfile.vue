@@ -185,18 +185,20 @@ export default {
   },
   mounted() {
     let tokens = localStorage.getItem("user-tokens");
-    let user = localStorage.getItem("user-details");
-    this.name = JSON.parse(user).name;
-    this.position = JSON.parse(user).position;
-    this.profile.email = JSON.parse(user).email;
-    this.profile.name = JSON.parse(user).name;
-    this.profile.date_of_birth = JSON.parse(user).date_of_birth;
-    this.profile.gender = JSON.parse(user).gender;
-    this.profile.people_id = JSON.parse(user).people_id;
-    this.profile.position = JSON.parse(user).position;
-    // console.warn(user)
+
     if (tokens == null) {
       this.$router.push({ name: "LogIn" });
+    } else {
+      let user = localStorage.getItem("user-details");
+      this.name = JSON.parse(user).name;
+      this.position = JSON.parse(user).position;
+      this.profile.email = JSON.parse(user).email;
+      this.profile.name = JSON.parse(user).name;
+      this.profile.date_of_birth = JSON.parse(user).date_of_birth;
+      this.profile.gender = JSON.parse(user).gender;
+      this.profile.people_id = JSON.parse(user).people_id;
+      this.profile.position = JSON.parse(user).position;
+      // console.warn(user)
     }
   },
 };

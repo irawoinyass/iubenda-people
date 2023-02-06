@@ -164,7 +164,7 @@ export default {
     },
 
     async loadData() {
-      let tokens = localStorage.getItem("user-tokens");
+      //let tokens = localStorage.getItem("user-tokens");
       let user = localStorage.getItem("user-details");
       this.name = JSON.parse(user).name;
       this.position = JSON.parse(user).position;
@@ -179,13 +179,18 @@ export default {
       this.tasks = result.data.data;
       ///console.warn(this.tasks);
 
-      if (tokens == null) {
-        this.$router.push({ name: "LogIn" });
-      }
+      // if (tokens == null) {
+      //   this.$router.push({ name: "LogIn" });
+      // }
     },
   },
   mounted() {
-    this.loadData();
+    let tokens = localStorage.getItem("user-tokens");
+    if (tokens == null) {
+      this.$router.push({ name: "LogIn" });
+    } else {
+      this.loadData();
+    }
   },
 };
 </script>

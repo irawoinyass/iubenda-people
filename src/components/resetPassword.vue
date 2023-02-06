@@ -175,14 +175,14 @@ export default {
   },
   mounted() {
     let tokens = localStorage.getItem("user-tokens");
-    let user = localStorage.getItem("user-details");
-    this.name = JSON.parse(user).name;
-    this.position = JSON.parse(user).position;
-    this.people_id = JSON.parse(user).people_id;
-
     // console.warn(user)
     if (tokens == null) {
       this.$router.push({ name: "LogIn" });
+    } else {
+      let user = localStorage.getItem("user-details");
+      this.name = JSON.parse(user).name;
+      this.position = JSON.parse(user).position;
+      this.people_id = JSON.parse(user).people_id;
     }
   },
 };

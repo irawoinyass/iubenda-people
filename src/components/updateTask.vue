@@ -196,23 +196,24 @@ export default {
   },
   async mounted() {
     let tokens = localStorage.getItem("user-tokens");
-    let user = localStorage.getItem("user-details");
-    this.name = JSON.parse(user).name;
-    this.position = JSON.parse(user).position;
-    this.tasks.email = JSON.parse(user).email;
-    // console.warn(user)
+
     if (tokens == null) {
       this.$router.push({ name: "LogIn" });
+    } else {
+      let user = localStorage.getItem("user-details");
+      this.name = JSON.parse(user).name;
+      this.position = JSON.parse(user).position;
+      this.tasks.email = JSON.parse(user).email;
+      // console.warn(user)
+      const result = await axios.get(
+        "http://localhost/iubenda_backend/api/people/task/find.php?id=" +
+          this.$route.params.id
+      );
+
+      this.tasks = result.data;
+
+      //console.log(result);
     }
-
-    const result = await axios.get(
-      "http://localhost/iubenda_backend/api/people/task/find.php?id=" +
-        this.$route.params.id
-    );
-
-    this.tasks = result.data;
-
-    //console.log(result);
   },
 };
 </script>
