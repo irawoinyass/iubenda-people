@@ -12,49 +12,70 @@ const routes = [
         
     name:'Dashboard',
     component:Dashboard,
-    path:'/'
+    path:'/',
+    meta: {
+        title: "Dashboard",
+    },
 
    },
   {
         
     name:'LogIn',
     component:LogIn,
-    path:'/login'
+    path:'/login',
+    meta: {
+        title: "Log in",
+    },
 
   },
   {
         
     name:'createTask',
     component:createTask,
-    path:'/create-task'
+    path:'/create-task',
+    meta: {
+        title: "create Task",
+    },
 
   },
   {
         
     name:'Tasks',
     component:Tasks,
-    path:'/tasks'
+    path:'/tasks',
+    meta: {
+        title: "Tasks List",
+    },
 
   },
   {
         
     name:'updateProfile',
     component:updateProfile,
-    path:'/update-profile'
+    path:'/update-profile',
+    meta: {
+        title: "update Profile",
+    },
 
   },
   {
         
     name:'resetPassword',
     component:resetPassword,
-    path:'/reset-password'
+    path:'/reset-password',
+    meta: {
+        title: "reset Password",
+    },
 
   },
   {
         
     name:'updateTask',
     component:updateTask,
-    path:'/update-task/:id'
+    path:'/update-task/:id',
+    meta: {
+        title: "update Task",
+    },
 
   }
   
@@ -66,6 +87,12 @@ const router = createRouter({
     history:createWebHistory(),
     routes
 });
+
+router.beforeEach((to, from, next) => {
+    document.title = `${to.meta.title}`;
+    next();
+})
+
 
 
 export default router
