@@ -79,7 +79,20 @@
         <div class="projects">
           <div class="card">
             <div class="card-header">
-              <h2>Record</h2>
+              <h2>
+                Record - <small>sort: </small>
+                <i
+                  class="fa fa-arrow-up"
+                  @click="sortHighest"
+                  style="color: blue"
+                ></i
+                >&nbsp;
+                <i
+                  class="fa fa-arrow-down"
+                  @click="sortLowest"
+                  style="color: red"
+                ></i>
+              </h2>
               <input type="text" v-model="search" placeholder="Search" />
             </div>
             <div class="card-body">
@@ -184,6 +197,12 @@ export default {
       // if (tokens == null) {
       //   this.$router.push({ name: "LogIn" });
       // }
+    },
+    sortLowest() {
+      this.tasks.sort((a, b) => (a.rating > b.rating ? 1 : -1));
+    },
+    sortHighest() {
+      this.tasks.sort((a, b) => (a.rating < b.rating ? 1 : -1));
     },
   },
   mounted() {
