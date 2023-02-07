@@ -7,6 +7,10 @@ make sure nodejs is installed on your computer
 ```
 
 ```
+clone or download the app on your computer
+```
+
+```
 npm install
 ```
 
